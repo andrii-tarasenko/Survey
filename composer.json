@@ -1,0 +1,20 @@
+{
+  "name": "tarasenko/new_panda",
+  "description": "Some description",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrii Tarasenko",
+      "email": "tarasenko.andrii@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "App/"
+    }
+  }
+}
