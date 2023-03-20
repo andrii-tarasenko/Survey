@@ -37,17 +37,13 @@ class MyDb
     public function setQuery ($query)
     {
         $getParameters = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        $objects = false;
 
-//        var_dump($getParameters);
-
-        foreach ($getParameters as $param) {
-//            echo '<pre>';
-//            print_r($param);
-//            echo '</pre>';
-
+        if  (!empty($getParameters)) {
+            $objects = $getParameters;
         }
 
-        return $getParameters;
+        return $objects;
     }
 
     public function createTable ($query, $tableName)
@@ -72,17 +68,42 @@ class MyDb
         return $this->db->query($sql)->fetchColumn();
     }
 
-    public function addObject ($column1, $column2, $tableName)
+    public function addObject ($objectData, $tableName)
     {
-        $date = date("Y-m-d H:i:s");
+        $count = count($objectData);
 
-        $stmt = $this->db->prepare("INSERT INTO " . $tableName . " (email, password, date_add) VALUES (:column1, :column2, :add_date)");
-        $stmt->bindParam(':column1', $column1);
-        $stmt->bindParam(':column2', $column2);
-        $stmt->bindParam(':add_date', $date);
+        $i = 1;
+
+        $col = '';
+        $val = '';
+
+        foreach ($objectData as $column => $value) {
+            if ($i < $count) {
+                $col .= $column . ', ';
+                $val .= '\'' . $value . '\', ';
+            } else {
+                $col .= $column;
+                $val .= '\'' . $value . '\'';
+            }
+            $i++;
+        }
+
+        $sql = "INSERT INTO " . $tableName . " (" . $col . ") VALUES (" . $val . ")";
+
+        $stmt = $this->db->prepare($sql);
 
         if ($stmt->execute()) {
             return true;
+        } else {
+            echo '<pre>';
+            print_r($sql);
+            echo '</pre>';
+
+            echo '<pre>';
+            print_r($stmt->execute());
+            echo '</pre>';
+
+            die();
         }
 
         return false;

@@ -2,23 +2,19 @@
 
 namespace App\models;
 
-//require_once MAIN_DIR . 'database.php';
-
-use Illuminate\Database\Eloquent\Model;
 use App\models\MyDb;
-use Illuminate\Support\Facades\DB;
-//use illuminate/support/Facades/Facade;
 
-class User
+
+class User  extends Model
 {
     public static $tableName = 'users';
     public $id;
     public $email;
     public $password;
 
-    public static function createTable($createTable)
+    public function createTable($createTable)
     {
-        $sql = "CREATE TABLE IF NOT EXISTS users (
+        $sql = "CREATE TABLE IF NOT EXISTS " . self::$tableName . "  (
             id INT(10) AUTO_INCREMENT PRIMARY KEY,
             email VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
@@ -26,7 +22,7 @@ class User
             date_update	timestamp NULL
         )";
 
-        $createTable->createTable($sql, self::$tableName);
+        return $createTable->createTable($sql, self::$tableName);
     }
 
     /**
@@ -34,27 +30,44 @@ class User
      *
      * @return bool
      */
-    public static function findByEmail($email)
+    public function findByEmail($email)
     {
         $createTable = new MyDb();
 
         if (!$createTable->getTable(self::$tableName)) {
-            self::createTable($createTable);
+            $this->createTable($createTable);
         } else {
-            $sql = 'SELECT * FROM ' . self::$tableName . ' WHERE email = \'' . $email . '\'';
+            $sql = 'SELECT id, email, password FROM ' . self::$tableName . ' WHERE email = \'' . $email . '\'';
 
-            if ($createTable->setQuery($sql)) {
-                return true;
+            if (!empty($createTable->setQuery($sql))) {
+                return $createTable->setQuery($sql);
             }
         }
 
         return false;
     }
 
-    public function save()
+    /**
+     * @return array
+     */
+    public function getColumn()
     {
-        $newUser = new MyDb();
-
-        return $newUser->addObject($this->email, $this->password, self::$tableName);
+        return ['email' => $this->email, 'password' => $this->password];
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTableName ()
+    {
+        return self::$tableName;
+    }
+
+//    public function save()
+//    {
+//        $newUser = new MyDb();
+//        $user = ['email' => $this->email, 'password' => $this->password];
+//
+//        return $newUser->addObject($user, self::$tableName);
+//    }
 }

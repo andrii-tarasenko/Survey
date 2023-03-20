@@ -1,14 +1,14 @@
 <?php
+session_start();
 require_once 'config/config.php';
 
-use App\Controllers\PersonalController;
-use App\Controllers\MainController;
+use App\Controllers\ProfileController;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $auth = new PersonalController();
+    $auth = new ProfileController();
     $auth->postProces();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $mainController = new MainController();
+    $mainController = new ProfileController();
     $page = $mainController->page();
 
     $mainController->render($page);

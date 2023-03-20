@@ -8,16 +8,16 @@ $( document ).ready(function() {
         event.preventDefault();
         // event.stopPropagation();
         $('.alert.alert-danger').remove();
+        $('.alert.alert-success').remove();
         // Отримуємо дані з форми
         let formData = form.serialize();
 
         // Відправляємо запит на сервер
         $.ajax({
             type: 'POST',
-            url: 'sign-in.php',
+            url: 'profile.php',
             data: formData,
             success: function(response) {
-                console.log('response', response);
                 let res = JSON.parse(response);
 
                 // acount created successfuly
@@ -25,9 +25,6 @@ $( document ).ready(function() {
                     let successDiv = $('<div class="alert alert-success" role="alert"></div>');
                     successDiv.text(res.message);
                     $('#alert_message').append(successDiv);
-                    setInterval(function() {
-                        location.assign("profile.php");
-                    }, 1000);
 
                 } else { // error with registration
                     let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
