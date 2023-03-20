@@ -85,5 +85,7 @@ class AuthController extends Controller
             $response = array('success' => false, 'error' => true, 'message' => 'This email is not exist.');
         }
         echo json_encode($response);
+
+        exit();
     }
 }
