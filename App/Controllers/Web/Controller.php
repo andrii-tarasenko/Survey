@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 class Controller
 {
@@ -13,13 +13,21 @@ class Controller
                 $namePage = 'home';
                 $title = 'Home page';
                 break;
+            case '/index.php':
+                header("Location: /");
+                exit();
             case '/sign-in.php':
                 $namePage = 'registration';
                 $title = 'User registration';
                 break;
             case '/profile.php':
-                $namePage = 'profile';
-                $title = 'Your personal profile';
+                if ($_SESSION['authenticated']) {
+                    $namePage = 'profile';
+                    $title = 'Your personal profile';
+                } else {
+                    header("Location: /");
+                    exit();
+                }
                 break;
             case '/login.php':
                 $namePage = 'login';

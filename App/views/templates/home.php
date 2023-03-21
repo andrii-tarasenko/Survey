@@ -10,7 +10,5 @@
         </div>
 
     </section>
-<!--    <section class="container">-->
-        <?php require_once ('surveys.php');?>
-<!--    </section>-->
+    <?php require_once ('surveys.php');?>
 </main>

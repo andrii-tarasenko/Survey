@@ -1,9 +1,7 @@
 <?php
-session_start();
 require_once 'config/config.php';
 
-use App\Controllers\AuthController;
-use App\Controllers\MainController;
+use App\Controllers\Web\AuthController;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new AuthController();

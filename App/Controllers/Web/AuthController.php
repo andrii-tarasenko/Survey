@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\models\User;
 use App\models\Validation;
+use App\Services\Session;
 
 class AuthController extends Controller
 {
@@ -55,6 +56,9 @@ class AuthController extends Controller
             $newUser->email = $email;
             $newUser->password = md5($password);
             if ($newUser->save()) {
+                $userId = $newUser->findByEmail($email);
+                Session::setSesion($userId['0']['id']);
+
                 return true;
             }
         }
@@ -73,9 +77,7 @@ class AuthController extends Controller
         if ($user) {
             $passwordFromDb = $user['0']['password'];
             if (md5($password) == $passwordFromDb) {
-                session_start();
-                $_SESSION['authenticated'] = true;
-                $_SESSION['user_id'] = $user['0']['id'];
+                Session::setSesion($user['0']['id']);
 
                 return true;
             } else {

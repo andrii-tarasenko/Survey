@@ -60,6 +60,16 @@ class Survey extends Model
         return $getObjects->setQuery($sql);
     }
 
+    public function removeSurveys ($userId, $title)
+    {
+        $sql = 'DELETE FROM ' . $this->getTableName() .
+            ' WHERE `user_id` = \'' . $userId . '\' AND `title` = \'' . $title . '\'';
+
+        $getObjects = new MyDb();
+
+        return $getObjects->setQuery($sql);
+    }
+
     public static function findByUserID($user_id): bool
     {
         $getSurvey = new MyDb();
@@ -78,12 +88,15 @@ class Survey extends Model
      */
     public function getColumn()
     {
+        $date = date("Y-m-d H:i:s");
         return [
             'user_id' => $this->user_id,
             'title' => $this->title,
             'questions' => $this->questions,
             'countOfVoices' => $this->countOfVoices,
             'status' => $this->status,
+            'date_add' => $date,
+            'date_update' => $date,
         ];
     }
 

@@ -15,10 +15,17 @@ class MyDb
 
     public function __construct()
     {
-        $this->host = "127.0.0.1";
-        $this->user = "root";
-        $this->password = "andre0991";
-        $this->dataBase = "panda";
+        if ($_SERVER['SERVER_NAME'] == 'panda.bezgmo.tot') {
+            $this->host = "127.0.0.1";
+            $this->user = "root";
+            $this->password = "andre0991";
+            $this->dataBase = "panda";
+        } else {
+            $this->host = "mysql315.1gb.ua";
+            $this->user = "gbua_z_bez7fb16";
+            $this->password = "azxM22pm@3Jj";
+            $this->dataBase = "gbua_z_bez7fb16";
+        }
 
         $dBConfig = [
             'dsn' => 'mysql:host=' . $this->host . ';dbname=' . $this->dataBase,
@@ -36,14 +43,22 @@ class MyDb
      */
     public function setQuery ($query)
     {
-        $getParameters = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-        $objects = false;
+        $conn = mysqli_connect($this->host, $this->user, $this->password, $this->dataBase);
 
-        if  (!empty($getParameters)) {
-            $objects = $getParameters;
+        $result = mysqli_query($conn, $query);
+        mysqli_close($conn);
+        $rows = [];
+
+        if (is_object($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $getParameters[] = $row;
+            }
+            if  (!empty($getParameters)) {
+                return $getParameters;
+            }
+        } elseif ($result) {
+            return true;
         }
-
-        return $objects;
     }
 
     public function createTable ($query, $tableName)
@@ -88,22 +103,17 @@ class MyDb
             $i++;
         }
 
-        $sql = "INSERT INTO " . $tableName . " (" . $col . ") VALUES (" . $val . ")";
+        $sql = 'INSERT INTO ' . $tableName . ' (' . $col . ') VALUES (' . $val . ')';
 
         $stmt = $this->db->prepare($sql);
 
         if ($stmt->execute()) {
             return true;
         } else {
-            echo '<pre>';
-            print_r($sql);
-            echo '</pre>';
+            $response = array('error' => true, 'message' => 'Some trouble in addObject');
+            echo json_encode($response);
 
-            echo '<pre>';
-            print_r($stmt->execute());
-            echo '</pre>';
-
-            die();
+            exit();
         }
 
         return false;

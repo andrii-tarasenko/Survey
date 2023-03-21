@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\models\Survey;
 
@@ -8,7 +8,9 @@ class ProfileController extends Controller
 {
     public function postProces()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['deleteSurvey'])) {
+            $this->removeSurveys($_POST['deleteSurvey']['title']);
+        } else {
             $surveyTitle = $_POST['surveyTitle'];
             unset($_POST['surveyTitle']);
 
@@ -51,15 +53,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return void
-     */
-    public function renderHeader($page) {
-        $title = $page;
-
-        include(TEMPLATES . 'header2.php');
-    }
-
-    /**
      * @param $namePage
      *
      * @return void
@@ -71,20 +64,30 @@ class ProfileController extends Controller
         $survey = new Survey();
         $survs = $survey->getSurveys($userId);
         $surveys = [];
-        foreach ($survs as $survey) {
-            $surveys[$survey['title']]['questions'][] = ['questions' => $survey['questions'], 'countOfVoices' =>  $survey['countOfVoices']];
-            $surveys[$survey['title']]['status'] =  $survey['status'];
+        if (!empty($survs)) {
+            foreach ($survs as $survey) {
+                $surveys[$survey['title']]['questions'][] = ['questions' => $survey['questions'], 'countOfVoices' =>  $survey['countOfVoices']];
+                $surveys[$survey['title']]['status'] =  $survey['status'];
+            }
         }
-
         $path = $this->getView($namePage);
 
         include($path);
     }
 
-    public function getSurveys () {
-        $surveys = Survey::getSurveys();
+    public function removeSurveys ($title)
+    {
+        $userId = $this->getUserId();
 
-        return $surveys;
+        $removeSurvey = new Survey();
+        if ($removeSurvey->removeSurveys($userId, $title)) {
+            $response = array('success' => true);
+        } else {
+            $response = array('error' => true, 'message' => 'Surveys was not deleted');
+        }
+        echo json_encode($response);
+
+        exit();
     }
 
     public function getUserId ()
@@ -93,6 +96,6 @@ class ProfileController extends Controller
     }
     public function getStatus ()
     {
-        return 'чорновик';
+        return 'чeрнетка';
     }
 }

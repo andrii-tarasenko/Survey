@@ -1,13 +1,17 @@
 $( document ).ready(function() {
     $('#exit').on('click', function(event) {
-        // event.preventDefault();
+        event.preventDefault();
         let deleteSession;
         deleteSession = true;
         $.ajax({
             type: 'POST',
-            url: '/index.php',
-            data: { deleteSession: deleteSession},
-            success: function() {
+            url: '/',
+            data: {deleteSession: deleteSession},
+            success: function(response) {
+                let res = JSON.parse(response);
+                if (res.success == true) {
+                    location.assign("/");
+                }
             },
             error: function(xhr, status, error) {
                 // console.log('Error:', error);

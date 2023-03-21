@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\models\Survey;
 
@@ -7,13 +7,16 @@ class MainController  extends Controller
 {
     public function deleteSession ()
     {
+        $response = array('error' => true);
+
         if ($_POST['deleteSession']) {
-            unset($_SESSION['authenticated']);
+            session_destroy();
 
-            return true;
+            $response = array('success' => true);
         }
+        echo json_encode($response);
 
-        return false;
+        exit();
     }
 
     /**

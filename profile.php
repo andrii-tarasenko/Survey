@@ -2,7 +2,7 @@
 session_start();
 require_once 'config/config.php';
 
-use App\Controllers\ProfileController;
+use App\Controllers\Web\ProfileController;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new ProfileController();

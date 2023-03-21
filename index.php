@@ -1,26 +1,19 @@
 <?php
 session_start();
+//print_r($_SESSION); die();
+
 require_once 'config/config.php';
 
-use App\Controllers\MainController;
+use App\Controllers\Web\MainController;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $mainController = new MainController();
     $page = $mainController->page();
 
     $mainController->render($page);
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mainController = new MainController();
-
-    if ($mainController->deleteSession()) {
-        header("Location: /");
-        exit();
+} else {
+    if (isset($_POST['deleteSession'])) {
+        $mainController = new MainController();
+        $mainController->deleteSession();
     }
 }
-
-
-
-
-
-

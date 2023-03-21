@@ -19,30 +19,17 @@ $( document ).ready(function() {
             data: formData,
             success: function(response) {
                 let res = JSON.parse(response);
-
                 // acount created successfuly
                 if (res.success == true) {
                     let successDiv = $('<div class="alert alert-success" role="alert"></div>');
                     successDiv.text(res.message);
                     $('#alert_message').append(successDiv);
-
-                } else { // error with registration
-                    let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
-
-                    // some error with validation email
-                    if (res.message.email !== undefined) {
-                        errorDiv.text(res.message.email);
-                        $('#alert_message').append(errorDiv);
-                    }
-
-                    // some error with validation password
-                    if (res.message.password !== undefined) {
-                        errorDiv.text(res.message.password);
-                        $('#alert_message').append(errorDiv);
-                    }
-
-                    // account allready exist
+                    setInterval(function() {
+                        location.assign("/profile.php");
+                    }, 1000);
+                } else {
                     if (res.error == true) {
+                        let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
                         errorDiv.text(res.message);
                         $('#alert_message').append(errorDiv);
                     }

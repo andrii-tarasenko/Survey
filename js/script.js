@@ -26,7 +26,7 @@ $( document ).ready(function() {
                     successDiv.text(res.message);
                     $('#alert_message').append(successDiv);
                     setInterval(function() {
-                        location.assign("profile.php");
+                        location.assign("/profile.php");
                     }, 1000);
 
                 } else { // error with registration
