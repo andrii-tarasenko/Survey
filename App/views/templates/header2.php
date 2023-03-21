@@ -16,11 +16,11 @@
                 integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
                 crossorigin="anonymous"></script>
         <script src="js/profile.js"></script>
+        <script src="js/exit.js"></script>
     </head>
     <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Сервіс опитувань</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,7 +31,10 @@
                     </li>
                     <?php if ($_SESSION['authenticated']) {?>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Опитування</a>
+                            <a class="nav-link" href="/profile.php">Особистий Кабінет</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="exit" class="nav-link" href="/">Вийти</a>
                         </li>
                     <?php }?>
                     <?php if (!$_SESSION['authenticated']) {?>

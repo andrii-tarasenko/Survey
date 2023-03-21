@@ -10,6 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $mainController->render($page);
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $mainController = new MainController();
+
+    if ($mainController->deleteSession()) {
+        header("Location: /");
+        exit();
+    }
+}
 
 
 

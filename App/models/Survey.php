@@ -48,9 +48,14 @@ class Survey extends Model
      *
      * @return bool
      */
-    public function getSurveys ($userId)
+    public function getSurveys ($userId = null)
     {
-        $sql = "SELECT id, title, questions, countOfVoices, status FROM " . $this->getTableName() . " WHERE user_id = '" . $userId . "'";
+        $sql = "SELECT id, title, questions, countOfVoices, status FROM " . $this->getTableName();
+
+        if ($userId !== null) {
+            $sql .= " WHERE user_id = '" . $userId . "'";
+        }
+
         $getObjects = new MyDb();
         return $getObjects->setQuery($sql);
     }

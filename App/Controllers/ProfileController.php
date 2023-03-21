@@ -41,10 +41,10 @@ class ProfileController extends Controller
             }
 
             if ($res) {
-                $response = array('success' => true, 'message' => 'Account successfully created');
+                $response = array('success' => true, 'message' => 'Survey successfully created');
 
             } else {
-                $response = array('success' => false, 'message' => 'ghgfhfghfghfg');
+                $response = array('success' => false, 'message' => 'Some trouble survey was not created');
             }
             echo json_encode($response);
         }
@@ -71,29 +71,10 @@ class ProfileController extends Controller
         $survey = new Survey();
         $survs = $survey->getSurveys($userId);
         $surveys = [];
-        $title = '';
         foreach ($survs as $survey) {
             $surveys[$survey['title']]['questions'][] = ['questions' => $survey['questions'], 'countOfVoices' =>  $survey['countOfVoices']];
             $surveys[$survey['title']]['status'] =  $survey['status'];
-
-//            $surveys[] = [
-//                'id' => $survey['id'],
-//                'title' => $survey['title'],
-//                'question' => $survey['questions'],
-//                'countOfVoices' => $survey['countOfVoices'],
-//                'status' => $survey['status']
-//            ];
         }
-
-
-//        echo '<pre>';
-//        print_r($surveys);
-//        echo '</pre>';
-//
-//
-//        die();
-
-
 
         $path = $this->getView($namePage);
 
@@ -108,65 +89,10 @@ class ProfileController extends Controller
 
     public function getUserId ()
     {
-        return 25;
+        return $_SESSION['user_id'];
     }
     public function getStatus ()
     {
         return 'чорновик';
     }
-
-    public function index()
-    {
-        // Отримуємо список всіх опитувань
-        $surveys = Survey::all();
-
-        // Виводимо HTML сторінку з списком опитувань
-        $html = '<h1>Список опитувань</h1>';
-        foreach ($surveys as $survey) {
-            $html .= '<div>';
-            $html .= '<h2>' . $survey->title . '</h2>';
-            $html .= '<p>' . $survey->description . '</p>';
-            $html .= '<a href="/survey/' . $survey->id . '">Детальніше</a>';
-            $html .= '</div>';
-        }
-        echo $html;
-    }
-
-    public function create()
-    {
-        // Виводимо HTML сторінку з формою створення нового опитування
-//        $html = '<h1>Створити нове опитування</h1>';
-//        $html .= '<form method="post" action="/survey/store">';
-//        $html .= '<label for="title">Назва:</label><br>';
-//        $html .= '<input type="text" id="title" name="title" required><br>';
-//        $html .= '<label for="description">Опис:</label><br>';
-//        $html .= '<textarea id="description" name="description" required></textarea><br>';
-//        $html .= '<button type="submit">Зберегти</button>';
-//        $html .= '</form>';
-//        echo $html;
-    }
-
-    public function store()
-    {
-        // Зберігаємо нове опитування в базі даних
-        $survey = new Survey();
-        $survey->title = $_POST['title'];
-        $survey->description = $_POST['description'];
-        $survey->save();
-
-        // Перенаправляємо користувача на сторінку зі списком опитувань
-        header('Location: /survey');
-    }
-
-    public function show($id)
-    {
-        // Отримуємо дані про опитування за ідентифікатором
-        $survey = Survey::find($id);
-
-        // Виводимо HTML сторінку з детальною інформацією про опитування
-        $html = '<h1>' . $survey->title . '</h1>';
-        $html .= '<p>' . $survey->description . '</p>';
-        echo $html;
-    }
-
 }
