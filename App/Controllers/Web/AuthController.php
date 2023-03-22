@@ -24,7 +24,11 @@ class AuthController extends Controller
                         $email = trim($_POST['login']);
                         if ($this->login($email, $password)) {
                             $response = array('success' => true, 'message' => 'You are successfully log in');
+                        } else {
+                            $response = array('error' => true, 'message' => 'You are email or password is wrong or is not exist');
                         }
+                        echo json_encode($response);
+                        exit();
                     } else {
                         $email = trim($_POST['email']);
                         if ($this->registration($email, $password)) {
@@ -80,14 +84,9 @@ class AuthController extends Controller
                 Session::setSesion($user['0']['id']);
 
                 return true;
-            } else {
-                $response = array('success' => false, 'error' => true, 'message' => 'Wrong password');
             }
-        } else {
-            $response = array('success' => false, 'error' => true, 'message' => 'This email is not exist.');
         }
-        echo json_encode($response);
 
-        exit();
+        return false;
     }
 }

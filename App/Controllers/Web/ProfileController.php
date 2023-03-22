@@ -61,6 +61,14 @@ class ProfileController extends Controller
      */
     public function renderBody($namePage) {
         $userId = $this->getUserId();
+        $surveys = $this->renderSurveys($userId);
+        $path = $this->getView($namePage);
+
+        include($path);
+    }
+
+    public function renderSurveys ($userId)
+    {
         $survey = new Survey();
         $survs = $survey->getSurveys($userId);
         $surveys = [];
@@ -70,9 +78,8 @@ class ProfileController extends Controller
                 $surveys[$survey['title']]['status'] =  $survey['status'];
             }
         }
-        $path = $this->getView($namePage);
 
-        include($path);
+        return $surveys;
     }
 
     public function removeSurveys ($title)
