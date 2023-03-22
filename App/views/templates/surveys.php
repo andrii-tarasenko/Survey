@@ -3,7 +3,13 @@
     <h1>Опитування</h1>
     <?php $i = 0; ?>
     <?php foreach ($surveys as $key => $survey) : ?>
-        <?php $i++; ?>
+        <?php $i++;
+        if ($survey['status'] !== 'published' && $_SERVER['REQUEST_URI'] == '/') {
+            continue;
+        }
+        if ($_SERVER['REQUEST_URI'] == '/' && $i > 11) {
+            break;
+        } ?>
         <div class="card" id="card_question_<?php echo $i;?>">
             <div class="card-header d-flex justify-content-between align-items-center" id="heading<?php echo $i; ?>">
                 <h2 class="mb-0">
@@ -14,12 +20,12 @@
                 <?php if ($_SERVER['REQUEST_URI'] !== '/') {?>
                     <div class="d-flex ml-auto mr-3">
                         <?php if ($survey['status'] == 'published') {?>
-                            <button type="button" class="btn btn-outline-secondary btn-sm mr-1" aria-label="Чернетка" data-key="card_question_<?php echo $i;?>" data-survey-name="<?php echo $key; ?>">
-                                Чернетка
+                            <button id="draft" type="button" class="btn btn-outline-secondary btn-sm mr-1 status" aria-label="Чернетка" data-key="card_question_<?php echo $i;?>" data-survey-name="<?php echo $key; ?>">
+                                Додати до чернеток
                             </button>
                         <?php } else {?>
-                            <button type="button" class="btn btn-outline-success btn-sm" aria-label="Опубліковано">
-                                Опубліковано
+                            <button id="published" type="button" class="btn btn-outline-success btn-sm status" aria-label="Опубліковано" data-key="card_question_<?php echo $i;?>" data-survey-name="<?php echo $key; ?>">
+                                Опублікувати
                             </button>
                         <?php }?>
                     </div>
@@ -41,6 +47,7 @@
                 </ul>
             </div>
         </div>
+
     <?php endforeach; ?>
 </div>
 <script>
@@ -71,6 +78,40 @@
                     error: function(xhr, status, error) {
                         console.log('Error:', error);
                         console.log('Помилка відправки запиту');
+                    }
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('.card-header button.status').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            $('.alert.alert-danger').remove();
+            let surveyName = this.getAttribute('data-survey-name');
+            let statusName = this.getAttribute('id');
+            // let cardId = this.getAttribute('data-key');
+            // let card = document.getElementById(cardId);
+            if (confirm('Чи ви впевнені, що хочете змінити статус?')) {
+                let changeStatus = {'action': 'changeStatus', 'title': surveyName, 'status':statusName};
+                $.ajax({
+                    type: 'POST',
+                    url: '/profile.php',
+                    data: {changeStatus: changeStatus},
+                    success: function(response) {
+                        let res = JSON.parse(response);
+                        if (res.success == true) {
+                            location.assign("/profile.php");
+                        } else {
+                            if (res.error == true) {
+                                let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
+                                errorDiv.text(res.message);
+                                $('#alert_message').append(errorDiv);
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', error);
+                        console.log('error send request');
                     }
                 });
             }

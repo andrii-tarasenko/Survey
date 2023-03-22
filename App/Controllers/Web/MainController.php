@@ -27,12 +27,7 @@ class MainController  extends Controller
         $survey = new Survey();
         $survs = $survey->getSurveys();
         $surveys = [];
-        $i = 0;
         foreach ($survs as $survey) {
-            $i++;
-            if ($i > 10) {
-                break;
-            }
             $surveys[$survey['title']]['questions'][] = ['questions' => $survey['questions'], 'countOfVoices' =>  $survey['countOfVoices']];
             $surveys[$survey['title']]['status'] =  $survey['status'];
         }

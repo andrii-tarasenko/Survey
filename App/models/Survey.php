@@ -11,16 +11,14 @@ class Survey extends Model
     public $countOfVoices;
     public $status;
 
+    public  $getObjects;
+
     public static $tableName = 'surveys';
 
-    public function getTitle()
-    {
-        return $this->title;
-    }
 
-    public function getQuestions()
+    public function __construct ()
     {
-        return $this->questions;
+        $this->getObjects = new MyDb();
     }
 
     /**
@@ -56,8 +54,7 @@ class Survey extends Model
             $sql .= " WHERE user_id = '" . $userId . "'";
         }
 
-        $getObjects = new MyDb();
-        return $getObjects->setQuery($sql);
+        return $this->getObjects->setQuery($sql);
     }
 
     public function removeSurveys ($userId, $title)
@@ -65,9 +62,15 @@ class Survey extends Model
         $sql = 'DELETE FROM ' . $this->getTableName() .
             ' WHERE `user_id` = \'' . $userId . '\' AND `title` = \'' . $title . '\'';
 
-        $getObjects = new MyDb();
+        return $this->getObjects->setQuery($sql);
+    }
 
-        return $getObjects->setQuery($sql);
+    public function changeStatus($title, $status)
+    {
+        $sql = 'UPDATE ' . $this->getTableName() .
+            ' SET  `status` = \'' . $status .  '\'  WHERE `title` = \'' . $title . '\'';
+
+        return $this->getObjects->setQuery($sql);
     }
 
     public static function findByUserID($user_id): bool

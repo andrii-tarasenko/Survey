@@ -42,12 +42,16 @@ class SendSurvey
 
                 $survey = $xml->addChild('survey');
                 $survey->addChild('title', $title);
-
+                $survey->addChild('status', $finalSurvey['status']);
 
                 $questions = $survey->addChild('all questions');
-                foreach ($finalSurvey as $question) {
-                    $q = $questions->addChild('question1');
-                    $q->addChild('question', $question['question']);
+
+
+                $i = 0;
+                foreach ($finalSurvey['questions'] as $question) {
+                    $i++;
+                    $q = $questions->addChild('question' . $i);
+                    $q->addChild('question', $question['questions']);
                     $q->addChild('voice', $question['countOfVoices']);
                 }
                 echo $xml->asXML();

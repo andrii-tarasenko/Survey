@@ -10,6 +10,8 @@ class ProfileController extends Controller
     {
         if (isset($_POST['deleteSurvey'])) {
             $this->removeSurveys($_POST['deleteSurvey']['title']);
+        } elseif (isset($_POST['changeStatus'])) {
+            $this->changeStatusSurvey($_POST['changeStatus']['title'], $_POST['changeStatus']['status']);
         } else {
             $surveyTitle = $_POST['surveyTitle'];
             $surveyStatus = $_POST['surveyStatus'];
@@ -91,6 +93,19 @@ class ProfileController extends Controller
             $response = array('success' => true);
         } else {
             $response = array('error' => true, 'message' => 'Surveys was not deleted');
+        }
+        echo json_encode($response);
+
+        exit();
+    }
+
+    public function changeStatusSurvey ($title, $status)
+    {
+        $removeSurvey = new Survey();
+        if ($removeSurvey->changeStatus($title, $status)) {
+            $response = array('success' => true);
+        } else {
+            $response = array('error' => true, 'message' => 'Surveys status was not updated');
         }
         echo json_encode($response);
 

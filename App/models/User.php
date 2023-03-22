@@ -63,11 +63,4 @@ class User  extends Model
         return self::$tableName;
     }
 
-//    public function save()
-//    {
-//        $newUser = new MyDb();
-//        $user = ['email' => $this->email, 'password' => $this->password];
-//
-//        return $newUser->addObject($user, self::$tableName);
-//    }
 }
