@@ -15,10 +15,17 @@ class MyDb
 
     public function __construct()
     {
-        $this->host = "127.0.0.1";
-        $this->user = "root";
-        $this->password = "andre0991";
-        $this->dataBase = "panda";
+        if ($_SERVER['SERVER_NAME'] == 'panda.bezgmo.tot') {
+            $this->host = "127.0.0.1";
+            $this->user = "root";
+            $this->password = "andre0991";
+            $this->dataBase = "panda";
+        } else {
+            $this->host = "mysql315.1gb.ua";
+            $this->user = "gbua_z_bez7fb16";
+            $this->password = "azxM22pm@3Jj";
+            $this->dataBase = "gbua_z_bez7fb16";
+        }
 
         $dBConfig = [
             'dsn' => 'mysql:host=' . $this->host . ';dbname=' . $this->dataBase,
@@ -36,18 +43,22 @@ class MyDb
      */
     public function setQuery ($query)
     {
-        $getParameters = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        $conn = mysqli_connect($this->host, $this->user, $this->password, $this->dataBase);
 
-//        var_dump($getParameters);
+        $result = mysqli_query($conn, $query);
+        mysqli_close($conn);
+        $rows = [];
 
-        foreach ($getParameters as $param) {
-//            echo '<pre>';
-//            print_r($param);
-//            echo '</pre>';
-
+        if (is_object($result)) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $getParameters[] = $row;
+            }
+            if  (!empty($getParameters)) {
+                return $getParameters;
+            }
+        } elseif ($result) {
+            return true;
         }
-
-        return $getParameters;
     }
 
     public function createTable ($query, $tableName)
@@ -72,17 +83,37 @@ class MyDb
         return $this->db->query($sql)->fetchColumn();
     }
 
-    public function addObject ($column1, $column2, $tableName)
+    public function addObject ($objectData, $tableName)
     {
-        $date = date("Y-m-d H:i:s");
+        $count = count($objectData);
 
-        $stmt = $this->db->prepare("INSERT INTO " . $tableName . " (email, password, date_add) VALUES (:column1, :column2, :add_date)");
-        $stmt->bindParam(':column1', $column1);
-        $stmt->bindParam(':column2', $column2);
-        $stmt->bindParam(':add_date', $date);
+        $i = 1;
+
+        $col = '';
+        $val = '';
+
+        foreach ($objectData as $column => $value) {
+            if ($i < $count) {
+                $col .= $column . ', ';
+                $val .= '\'' . $value . '\', ';
+            } else {
+                $col .= $column;
+                $val .= '\'' . $value . '\'';
+            }
+            $i++;
+        }
+
+        $sql = 'INSERT INTO ' . $tableName . ' (' . $col . ') VALUES (' . $val . ')';
+
+        $stmt = $this->db->prepare($sql);
 
         if ($stmt->execute()) {
             return true;
+        } else {
+            $response = array('error' => true, 'message' => 'Some trouble in addObject');
+            echo json_encode($response);
+
+            exit();
         }
 
         return false;

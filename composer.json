@@ -10,7 +10,9 @@
     }
   ],
   "require": {
-    "php": "^7.2"
+    "php": "^7.2",
+    "ext-pdo": "^7.2",
+    "ext-simplexml": "*"
   },
   "autoload": {
     "psr-4": {

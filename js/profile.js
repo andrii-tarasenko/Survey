@@ -8,18 +8,17 @@ $( document ).ready(function() {
         event.preventDefault();
         // event.stopPropagation();
         $('.alert.alert-danger').remove();
+        $('.alert.alert-success').remove();
         // Отримуємо дані з форми
         let formData = form.serialize();
 
         // Відправляємо запит на сервер
         $.ajax({
             type: 'POST',
-            url: 'sign-in.php',
+            url: 'profile.php',
             data: formData,
             success: function(response) {
-                console.log('response', response);
                 let res = JSON.parse(response);
-
                 // acount created successfuly
                 if (res.success == true) {
                     let successDiv = $('<div class="alert alert-success" role="alert"></div>');
@@ -28,24 +27,9 @@ $( document ).ready(function() {
                     setInterval(function() {
                         location.assign("/profile.php");
                     }, 1000);
-
-                } else { // error with registration
-                    let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
-
-                    // some error with validation email
-                    if (res.message.email !== undefined) {
-                        errorDiv.text(res.message.email);
-                        $('#alert_message').append(errorDiv);
-                    }
-
-                    // some error with validation password
-                    if (res.message.password !== undefined) {
-                        errorDiv.text(res.message.password);
-                        $('#alert_message').append(errorDiv);
-                    }
-
-                    // account allready exist
+                } else {
                     if (res.error == true) {
+                        let errorDiv = $('<div class="alert alert-danger" role="alert"></div>');
                         errorDiv.text(res.message);
                         $('#alert_message').append(errorDiv);
                     }
