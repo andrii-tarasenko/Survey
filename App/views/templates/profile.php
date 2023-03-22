@@ -15,6 +15,13 @@
                     <label for="surveyTitle">Заголовок опитування</label>
                     <input type="text" name="surveyTitle" class="form-control" id="surveyTitle" placeholder="Введіть заголовок">
                 </div>
+                <div class="form-group">
+                    <label for="surveyStatus">Статус опитування</label>
+                    <select class="form-control" name="surveyStatus" id="surveyStatus">
+                        <option value="draft">Чернетка</option>
+                        <option value="published">Опубліковано</option>
+                    </select>
+                </div>
                 <div id="questions">
                     <div class="form-group question">
                         <label for="question">Питання 1</label>

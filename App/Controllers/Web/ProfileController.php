@@ -12,12 +12,12 @@ class ProfileController extends Controller
             $this->removeSurveys($_POST['deleteSurvey']['title']);
         } else {
             $surveyTitle = $_POST['surveyTitle'];
+            $surveyStatus = $_POST['surveyStatus'];
             unset($_POST['surveyTitle']);
+            unset($_POST['surveyStatus']);
 
             $setSurveys = [];
-
             $userID = $this->getUserId ();
-            $status = $this->getStatus ();
 
             foreach ($_POST as $key => $value) {
                 $rowVariable = explode('_', $key);
@@ -36,7 +36,7 @@ class ProfileController extends Controller
                 $newSurvey->title = $surveyTitle;
                 $newSurvey->user_id = $userID;
                 $newSurvey->countOfVoices = $setSurvey['voice'];
-                $newSurvey->status = $status;
+                $newSurvey->status = $surveyStatus;
                 if ($newSurvey->save()) {
                     $res = true;
                 }
@@ -100,9 +100,5 @@ class ProfileController extends Controller
     public function getUserId ()
     {
         return $_SESSION['user_id'];
-    }
-    public function getStatus ()
-    {
-        return 'чeрнетка';
     }
 }

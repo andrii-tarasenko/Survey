@@ -11,8 +11,18 @@
                         <?php echo $key; ?>
                     </button>
                 </h2>
-
                 <?php if ($_SERVER['REQUEST_URI'] !== '/') {?>
+                    <div class="d-flex ml-auto mr-3">
+                        <?php if ($survey['status'] == 'published') {?>
+                            <button type="button" class="btn btn-outline-secondary btn-sm mr-1" aria-label="Чернетка" data-key="card_question_<?php echo $i;?>" data-survey-name="<?php echo $key; ?>">
+                                Чернетка
+                            </button>
+                        <?php } else {?>
+                            <button type="button" class="btn btn-outline-success btn-sm" aria-label="Опубліковано">
+                                Опубліковано
+                            </button>
+                        <?php }?>
+                    </div>
                     <button type="button" class="close" aria-label="Close" data-key="card_question_<?php echo $i;?>" data-survey-name="<?php echo $key; ?>">
                         <span aria-hidden="true">&times;</span>
                     </button>
